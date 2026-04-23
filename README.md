@@ -69,6 +69,22 @@ virtctl console v-link-vm
 
 (Note: To log out of the Cirros console, use the key combination `Ctrl+]`)
 
+### (Optional) Step 6: Deploy Monitoring Stack
+
+This project includes a basic monitoring stack with Prometheus and Grafana to visualize KubeVirt metrics.
+
+1.  **Deploy Prometheus & Grafana:**
+    ```bash
+    bash setup/deploy-monitoring.sh
+    ```
+
+2.  **Access Grafana:**
+    Wait a few minutes for the pods to start, then set up a port-forward to the Grafana service.
+    ```bash
+    kubectl port-forward svc/grafana -n monitoring 3000:3000
+    ```
+    You can now open [http://localhost:3000](http://localhost:3000) in your browser. The default login is `admin` / `admin`. The Prometheus data source will be pre-configured. You can explore KubeVirt metrics by creating a new dashboard and querying metrics like `kubevirt_vmi_memory_used_bytes`.
+
 ### Deploying Other VMs
 
 This project also includes manifests for other types of VMs. You can deploy them using `kubectl apply`.
