@@ -24,14 +24,14 @@ spec:
       volumes:
         - name: containerdisk
           containerDisk:
-            image: quay.io/kubevirt/fedora-cloud-container-disk-demo:40
+            image: quay.io/containerdisks/fedora:40
         - name: cloudinitdisk
-          cloudInitNoCloud:
-            # The official Fedora cloud image has no default password.
-            # This cloud-init data will create the 'fedora' user and set a password.
+          cloudInitConfigDrive:
             userData: |
               #cloud-config
               user: fedora
-              password: password
-              chpasswd: { expire: False }
+              chpasswd:
+                list: |
+                  fedora:password
+                expire: False
               ssh_pwauth: True

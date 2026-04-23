@@ -1,0 +1,49 @@
+# ---
+# NOTE: This Windows VM manifest is commented out by default.
+# The container disk image (`quay.io/containerdisks/windows:2019-amd64`)
+# requires authentication with a quay.io account.
+#
+# To use this manifest:
+# 1. Create a free account on https://quay.io/
+# 2. Run `docker login quay.io` on your host machine.
+# 3. Uncomment this file.
+# 4. Run `kubectl apply -f manifests/06-windows-vm.yaml`
+# ---
+
+# apiVersion: kubevirt.io/v1
+# kind: VirtualMachine
+# metadata:
+#   name: v-link-vm-windows
+# spec:
+#   runStrategy: Always
+#   template:
+#     metadata:
+#       labels:
+#         kubevirt.io/domain: v-link-vm-windows
+#     spec:
+#       domain:
+#         cpu:
+#           cores: 2
+#         devices:
+#           disks:
+#             - name: containerdisk
+#               disk:
+#                 bus: virtio
+#             - name: cloudinitdisk
+#               disk:
+#                 bus: virtio
+#         resources:
+#           requests:
+#             memory: 4Gi # Windows requires significantly more memory
+#       volumes:
+#         - name: containerdisk
+#           containerDisk:
+#             image: quay.io/containerdisks/windows:2019-amd64
+#         - name: cloudinitdisk
+#           cloudInitNoCloud:
+#             # For Windows, userData is typically a PowerShell script.
+#             # This script will set the Administrator password.
+#             # It can take a few minutes for this to run on first boot.
+#             userData: |
+#               #ps1_sysnative
+#               net user Administrator 'Password123!' /active:yes

@@ -69,7 +69,37 @@ virtctl console v-link-vm
 
 (Note: To log out of the Cirros console, use the key combination `Ctrl+]`)
 
-### Managing the VM
+### Deploying Other VMs
+
+This project also includes manifests for other types of VMs. You can deploy them using `kubectl apply`.
+
+#### Fedora VM
+```bash
+kubectl apply -f manifests/05-fedora-vm.yaml
+```
+- **Connect:** `virtctl console v-link-vm-fedora`
+- **Login:** `fedora` / `password`
+
+#### Custom Ubuntu VM
+This requires building a local Docker image first. See the [Advanced Guide](docs/advanced-custom-images.md) for details.
+```bash
+kubectl apply -f manifests/04-ubuntu-custom-vm.yaml
+```
+- **Connect:** `virtctl console v-link-vm-ubuntu`
+- **Login:** `ubuntu` / `password`
+
+#### Windows Server 2019 VM (Requires Authentication)
+**Note:** The official Windows container disk requires authentication with a `quay.io` account. The manifest `manifests/06-windows-vm.yaml` is commented out by default. To use it, you must first run `docker login quay.io` on your host machine and then uncomment the manifest file.
+<!--
+**Warning:** This image is very large (>10GB) and will take a long time to download the first time.
+```bash
+kubectl apply -f manifests/06-windows-vm.yaml
+```
+- **Connect:** Windows does not have a serial console login. Access is typically via RDP, which requires setting up a Kubernetes service (not included in this project). You can verify it is running with `kubectl get vmi v-link-vm-windows`.
+- **Login:** Administrator / `Password123!`
+-->
+
+### Managing the VMs
 
 *   **Stop the VM:** `virtctl stop v-link-vm`
 *   **Start the VM:** `virtctl start v-link-vm`
