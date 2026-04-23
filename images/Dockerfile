@@ -1,5 +1,5 @@
 # Stage 1: Create the bootable disk image
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:24.04 AS builder
 
 # Install curl and the necessary CA certificates
 ENV DEBIAN_FRONTEND=noninteractive
