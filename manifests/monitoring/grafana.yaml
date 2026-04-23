@@ -37,17 +37,14 @@ spec:
         volumeMounts:
         - name: datasources-volume
           mountPath: /etc/grafana/provisioning/datasources
-        resources:
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
       volumes:
       - name: datasources-volume
         configMap:
           name: grafana-datasources
+      - name: grafana-storage
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

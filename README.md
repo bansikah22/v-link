@@ -128,6 +128,8 @@ For a hands-on guide to using the VM and seeing how it interacts with the Kubern
 
 For a more advanced guide on how to build your own custom VM images using Docker, see the [Advanced: Custom Images Guide](docs/advanced-custom-images.md).
 
+For answers to common questions about KubeVirt and the design of this project, see the [Design Choices & FAQ](docs/design-choices.md).
+
 ---
 
 ## License

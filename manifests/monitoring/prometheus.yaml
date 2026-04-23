@@ -4,6 +4,12 @@ kind: Namespace
 metadata:
   name: monitoring
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -34,7 +40,7 @@ roleRef:
   name: prometheus
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: prometheus # Use the dedicated ServiceAccount
   namespace: monitoring
 ---
 apiVersion: v1
@@ -73,27 +79,26 @@ spec:
       labels:
         app: prometheus
     spec:
+      serviceAccountName: prometheus # Assign the ServiceAccount
       containers:
       - name: prometheus
         image: prom/prometheus:v2.47.0
         args:
         - "--config.file=/etc/prometheus/prometheus.yml"
+        - "--storage.tsdb.path=/prometheus"
         ports:
         - containerPort: 9090
         volumeMounts:
         - name: config-volume
           mountPath: /etc/prometheus
-        resources:
-          limits:
-            memory: "512Mi"
-            cpu: "1"
-          requests:
-            memory: "256Mi"
-            cpu: "500m"
+        - name: prometheus-storage # Mount for persistent data
+          mountPath: /prometheus
       volumes:
       - name: config-volume
         configMap:
           name: prometheus-config
+      - name: prometheus-storage # Use emptyDir for simple, non-durable persistence
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
