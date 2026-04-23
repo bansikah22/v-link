@@ -1,0 +1,25 @@
+# .github/dependabot.yml
+# Basic Dependabot configuration for a Docker-based project.
+
+version: 2
+updates:
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    # Look for Dockerfiles in the 'images' directory
+    directory: "/images"
+    # Check for updates daily
+    schedule:
+      interval: "daily"
+    # Add labels to the PRs for better organization
+    labels:
+      - "dependencies"
+      - "docker"
+
+  # Also enable version updates for GitHub Actions (good practice)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "github-actions"

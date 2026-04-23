@@ -1,0 +1,29 @@
+# Downloaded Command-Line Tools
+# These are fetched by the setup scripts and should not be version-controlled.
+minikube
+kubectl
+virtctl
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE and editor configuration
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.bak
+
+# Sensitive information
+# Although not used in this project, it's a best practice to ignore them.
+.env
+*.pem
+*.key
+credentials*
+
+# Log files
+*.log

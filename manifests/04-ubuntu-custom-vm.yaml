@@ -1,0 +1,39 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: v-link-vm-ubuntu
+spec:
+  runStrategy: Always
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: v-link-vm-ubuntu
+    spec:
+      domain:
+        devices:
+          disks:
+            - name: containerdisk
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+        resources:
+          requests:
+            memory: 2Gi # Ubuntu requires more memory
+      volumes:
+        - name: containerdisk
+          containerDisk:
+            image: v-link-custom-ubuntu:v1
+            # imagePullPolicy: Never is important when using a locally loaded image
+            imagePullPolicy: Never
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            # This cloud-init data will create a user and set a password on first boot.
+            userData: |
+              #cloud-config
+              user: ubuntu
+              password: password
+              chpasswd: { expire: False }
+              ssh_pwauth: True
+              hostname: custom-ubuntu-vm

@@ -1,2 +1,89 @@
-# v-link
-Kubevirt Exploration
+# Project V-Link (Virtualization-Link)
+
+Welcome to Project V-Link, a blueprint for running virtual machines on Kubernetes using KubeVirt. This project provides the necessary scripts and manifests to set up a complete local development environment using **Kind (Kubernetes in Docker)**.
+
+## About KubeVirt
+
+KubeVirt is an open-source project that extends Kubernetes to manage virtual machines alongside containers. It provides a unified platform for orchestrating both modern, containerized workloads and traditional, VM-based applications. For a more detailed explanation of the architecture, see the [KubeVirt Explained](docs/kubevirt-explained.md) document.
+
+*   **Official Website:** [https://kubevirt.io/](https://kubevirt.io/)
+*   **Official Kind Quickstart:** [https://kubevirt.io/quickstart_kind/](https://kubevirt.io/quickstart_kind/)
+
+## Environment Requirements
+
+*   **Host OS:** A Linux distribution that can run Docker (Ubuntu 22.04/24.04 recommended).
+*   **Tools:** Docker, `curl`, and standard shell utilities.
+*   **RAM:** 8GB recommended.
+*   **Disk:** 20GB+ of disk space.
+
+## Setup and Usage
+
+This project uses **Kind** to create a local Kubernetes cluster inside Docker. This method is highly reliable and works on most systems. It uses software emulation for the VMs, which is slower than hardware-assisted virtualization but is perfect for development and testing.
+
+### Step 1: Prepare the Host System
+
+**This is a critical first step.** The KubeVirt components require higher system limits than a default OS installation provides. Run the following script to increase these limits.
+
+```bash
+bash setup/prepare-host.sh
+```
+
+### Step 2: Install Dependencies
+
+Run the `install-deps.sh` script. This will check for and install all the necessary command-line tools, including `kubectl`, `virtctl`, and `kind`.
+
+```bash
+bash setup/install-deps.sh
+```
+
+### Step 3: Initialize the Kind Cluster
+
+Run the `kind-cluster-init.sh` script. This will:
+1.  Create a new Kind cluster.
+2.  Deploy the official KubeVirt and CDI operators.
+3.  Automatically enable software emulation.
+
+This process can take **5-10 minutes** as it downloads all the necessary container images for Kubernetes and KubeVirt.
+
+```bash
+bash setup/kind-cluster-init.sh
+```
+
+### Step 4: Deploy the Test VM
+
+Once the cluster is ready, use the `deploy.sh` script to create a test virtual machine. The VM uses a very small Cirros cloud image, so it will start very quickly.
+
+```bash
+bash setup/deploy.sh
+```
+
+### Step 5: Connect to the VM
+
+After a minute or so, you can connect to the VM's console using `virtctl`.
+
+```bash
+virtctl console v-link-vm
+```
+*   **Login:** `cirros`
+*   **Password:** `password`
+
+(Note: To log out of the Cirros console, use the key combination `Ctrl+]`)
+
+### Managing the VM
+
+*   **Stop the VM:** `virtctl stop v-link-vm`
+*   **Start the VM:** `virtctl start v-link-vm`
+*   **Delete the VM:** `kubectl delete vm v-link-vm`
+*   **Destroy the entire cluster:** `kind delete cluster`
+
+### Exploring the VM
+
+For a hands-on guide to using the VM and seeing how it interacts with the Kubernetes cluster, see the [VM Examples Document](docs/vm-examples.md).
+
+For a more advanced guide on how to build your own custom VM images using Docker, see the [Advanced: Custom Images Guide](docs/advanced-custom-images.md).
+
+---
+
+## License
+
+This project is licensed under the [Apache 2.0 License](LICENSE).

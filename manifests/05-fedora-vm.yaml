@@ -1,0 +1,37 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: v-link-vm-fedora
+spec:
+  runStrategy: Always
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: v-link-vm-fedora
+    spec:
+      domain:
+        devices:
+          disks:
+            - name: containerdisk
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+        resources:
+          requests:
+            memory: 2Gi # Fedora requires more memory than Cirros
+      volumes:
+        - name: containerdisk
+          containerDisk:
+            image: quay.io/kubevirt/fedora-cloud-container-disk-demo:40
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            # The official Fedora cloud image has no default password.
+            # This cloud-init data will create the 'fedora' user and set a password.
+            userData: |
+              #cloud-config
+              user: fedora
+              password: password
+              chpasswd: { expire: False }
+              ssh_pwauth: True
