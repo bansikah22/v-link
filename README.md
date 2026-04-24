@@ -123,7 +123,9 @@ This project includes a basic monitoring stack with Prometheus and Grafana to vi
     ```
     Then, you would access Grafana at [http://localhost:3001](http://localhost:3001).
 
-    The default login is `admin` / `admin`. The Prometheus data source will be pre-configured. You can explore KubeVirt metrics by creating a new dashboard and querying metrics like `kubevirt_vmi_memory_used_bytes`.
+    The default login is `admin` / `admin`. The Prometheus data source will be pre-configured.
+
+    For a step-by-step guide on creating your first dashboard, see the [Grafana Dashboard Guide](docs/grafana-dashboard-guide.md).
 
 ### Deploying Other VMs
 
