@@ -18,14 +18,46 @@ KubeVirt is an open-source project that extends Kubernetes to manage virtual mac
 
 ## Setup and Usage
 
+## Setup and Usage
+
 This project uses **Kind** to create a local Kubernetes cluster inside Docker. This method is highly reliable and works on most systems. It uses software emulation for the VMs, which is slower than hardware-assisted virtualization but is perfect for development and testing.
 
-### Step 1: Prepare the Host System
+### Quick Start (One-Liner)
 
+For a fast setup, you can run all the preparation and initialization steps with a single command. You will be prompted for your password for the host preparation step.
+```bash
+bash setup/prepare-host.sh && bash setup/install-deps.sh && bash setup/kind-cluster-init.sh
+```
+
+### Manual Step-by-Step
+
+#### Step 1: Prepare the Host System
 **This is a critical first step.** The KubeVirt components require higher system limits than a default OS installation provides. Run the following script to increase these limits.
-
 ```bash
 bash setup/prepare-host.sh
+```
+
+#### Step 2: Install Dependencies
+Run the `install-deps.sh` script. This will check for and install all the necessary command-line tools, including `kubectl`, `virtctl`, and `kind`.
+```bash
+bash setup/install-deps.sh
+```
+
+#### Step 3: Initialize the Kind Cluster
+Run the `kind-cluster-init.sh` script. This will:
+1.  Create a new Kind cluster.
+2.  Deploy the official KubeVirt and CDI operators.
+3.  Automatically enable software emulation.
+
+This process can take **5-10 minutes** as it downloads all the necessary container images for Kubernetes and KubeVirt.
+```bash
+bash setup/kind-cluster-init.sh
+```
+
+### Step 4: Deploy the Test VM
+Once the cluster is ready, use the `deploy.sh` script to create a test virtual machine. The VM uses a very small Cirros cloud image, so it will start very quickly.
+```bash
+bash setup/deploy.sh
 ```
 
 ### Step 2: Install Dependencies
@@ -83,7 +115,15 @@ This project includes a basic monitoring stack with Prometheus and Grafana to vi
     ```bash
     kubectl port-forward svc/grafana -n monitoring 3000:3000
     ```
-    You can now open [http://localhost:3000](http://localhost:3000) in your browser. The default login is `admin` / `admin`. The Prometheus data source will be pre-configured. You can explore KubeVirt metrics by creating a new dashboard and querying metrics like `kubevirt_vmi_memory_used_bytes`.
+    You can now open [http://localhost:3000](http://localhost:3000) in your browser.
+
+    **Note:** If you get an "address already in use" error, it means another service on your machine is using port 3000. You can map to a different local port by changing the command, for example, to use port 3001:
+    ```bash
+    kubectl port-forward svc/grafana -n monitoring 3001:3000
+    ```
+    Then, you would access Grafana at [http://localhost:3001](http://localhost:3001).
+
+    The default login is `admin` / `admin`. The Prometheus data source will be pre-configured. You can explore KubeVirt metrics by creating a new dashboard and querying metrics like `kubevirt_vmi_memory_used_bytes`.
 
 ### Deploying Other VMs
 

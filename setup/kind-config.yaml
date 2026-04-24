@@ -1,0 +1,14 @@
+# This configuration file tells Kind how to create a cluster
+# that is suitable for running KubeVirt.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  # This is required for KubeVirt to access kernel modules
+  extraMounts:
+  - hostPath: /lib/modules
+    containerPath: /lib/modules
+    readOnly: true
+  # This is required for KubeVirt to access device information
+  - hostPath: /dev
+    containerPath: /dev
