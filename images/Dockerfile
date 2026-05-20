@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:26.04 AS builder
 
 # Install curl and the necessary CA certificates
 ENV DEBIAN_FRONTEND=noninteractive
