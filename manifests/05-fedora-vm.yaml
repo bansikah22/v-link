@@ -26,12 +26,10 @@ spec:
           containerDisk:
             image: quay.io/containerdisks/fedora:40
         - name: cloudinitdisk
-          cloudInitConfigDrive:
+          cloudInitNoCloud:
+            # A simple, standard cloud-init script to set the password
+            # for the default 'fedora' user.
             userData: |
               #cloud-config
-              user: fedora
-              chpasswd:
-                list: |
-                  fedora:password
-                expire: False
-              ssh_pwauth: True
+              password: password
+              chpasswd: { expire: false }
